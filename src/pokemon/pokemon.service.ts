@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ParseMongoIdPipe } from "./../common/pipes/parse-mongo-id/parse-mongo-id.pipe";
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { Model, isValidObjectId } from 'mongoose';
@@ -19,17 +20,12 @@ export class PokemonService {
     try {    const pokemon = await this.pokemonModel.create(createPokemonDto)    // validamos que el nro o usuario no exista para poder crearlo en DATABASE 
     return pokemon;}
     catch (error){                // Si el usuario o nro existe devolvemos el error del servidor y con el código del mismo indicamos que tipo de error es   
-      if(error.code === 11000){     
-        throw new BadRequestException(`Pokemon exists in DB ${JSON.stringify(error.keyValue)}`);     
-      }
-      console.log(error);  // si el codigo es diferente al que indicamos en la condicion IF retornamos el numero y pedimos chequeo en Logs 
-      throw new InternalServerErrorException(`Cant Create Pokemon - Check Server Logs`);      
-      }
-    }
+     this.handleException(error)  //llamando al metodo privado de manejador de errores
+    }}
 //-----------------------------------------------------------------//
 //-----------------------------------------------------------------//    
-  async findAllPokemon() {
-    return 'this.pokemon'
+  async findAllPokemon(): Promise<Pokemon[]> {   // espera una Promesa con un arreglo de Todos los Pokemones 
+    return this.pokemonModel.find().exec();  // retorna todos los pokemones en la DATABASE y los envia al arreglo resolviendo asi la promesa 
   }
 //-----------------------------------------------------------------//
 
@@ -59,15 +55,36 @@ return pokemon;
  
 //-----------------------------------------------------------------//
 async update(id: string, updatePokemonDto: UpdatePokemonDto) {
-const pokemon = await this.findOne(id) // llamamos a la función findOne para ubicar el pokemon a modificar ya sea por nombre numero o el dato que se use segun este el DATABASE
-if(updatePokemonDto.name)
+try{const pokemon = await this.findOne(id) // llamamos a la función findOne para ubicar el pokemon a modificar ya sea por nombre numero o el dato que se use segun este el DATABASE
+    if(updatePokemonDto.name)
 updatePokemonDto.name = updatePokemonDto.name.toLowerCase() //convertimos todo el nombre en minusculas por que asi los tenemos grabados en DATABASE 
 await pokemon.updateOne(updatePokemonDto)   // actualizamos el objeto completo del pokemon 
-return {...pokemon.toJSON,...updatePokemonDto};
-  }
+return {...pokemon.toJSON,...updatePokemonDto}}
+catch (error){
+        this.handleException(error)  //llamando al metodo privado de manejador de errores 
+  }}
 //-----------------------------------------------------------------//
-  remove(id: string) {
-    return `This action removes a #${id} pokemon`;
-  }
-  //-----------------------------------------------------------------//
+  async remove(id: string) {
+  //   const pokemon = await this.findOne(id) // declaramos la constante y llamamos al metodo de busqueda de ese unico pokemon
+  //   await pokemon.deleteOne()  // aplicamos el metodo de borrado
+  // const result = await this.pokemonModel.findByIdAndDelete(id)
+  const {deletedCount} = await this.pokemonModel.deleteOne({_id:id})
+  if (deletedCount === 0 )
+  throw new BadRequestException(`Pokemon whith id ${id} no found  `)
+return
 }
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
+private handleException (error:any) {
+  
+  if(error.code === 11000){     
+        throw new BadRequestException(`Pokemon exists in DB ${JSON.stringify(error.keyValue)}`);     
+      }
+      console.log(error);  // si el código es diferente al que indicamos en la condicion IF retornamos el numero y pedimos chequeo en Logs 
+      throw new InternalServerErrorException(`Cant Create Pokemon - Check Server Logs`);      
+      }
+  
+}
+
+
+

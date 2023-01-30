@@ -53,7 +53,7 @@ $ npm run test:cov
 
 3.- Tener nest CLI instalado
 ```
-  nom i-g @nestjs/cli
+  npm i -g @nestjs/cli
 ```
 
 4.- Levantar la base de datos 

@@ -3,6 +3,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path'
 import { PokemonModule } from './pokemon/pokemon.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CommonModule } from './common/common.module';
 @Module({
   imports: [
   ServeStaticModule.forRoot({
@@ -10,10 +11,10 @@ import { MongooseModule } from '@nestjs/mongoose';
   }),
   
 
-MongooseModule.forRoot('mongodb://localhost:27017/nest-pokemon'),
+MongooseModule.forRoot('mongodb+srv://sa:21121733@cluster0.gschvgu.mongodb.net/pokedex?retryWrites=true&w=majority'), // aca es donde indicamos la url de conexion a la base de datos puede ser local o en mi caso por MongoAtlas "cloud"
 
 
-  PokemonModule
+  PokemonModule, CommonModule
 ],
 })
 export class AppModule {}
