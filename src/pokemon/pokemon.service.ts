@@ -1,4 +1,4 @@
-import { BadGatewayException, BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { Model, isValidObjectId } from 'mongoose';
@@ -12,7 +12,7 @@ export class PokemonService {
   @InjectModel(Pokemon.name)
   private readonly pokemonModel:Model<Pokemon> ){}
  
-
+//-----------------------------------------------------------------//
   async create(createPokemonDto: CreatePokemonDto) {
     createPokemonDto.name = createPokemonDto.name.toLowerCase(); // para grabar los nombres en minúsculas 
     // se usa try and catch para poder realizar validacion de usario o nro repetido usando una unica consulta a la DB y ahorrar tiempo y recursos 
@@ -26,17 +26,21 @@ export class PokemonService {
       throw new InternalServerErrorException(`Cant Create Pokemon - Check Server Logs`);      
       }
     }
-  findAll() {
-    return `This action returns all pokemon`;
+//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//    
+  async findAllPokemon() {
+    return 'this.pokemon'
   }
+//-----------------------------------------------------------------//
 
+//-----------------------------------------------------------------//
 async findOne(id: string) {
 let pokemon:Pokemon;
-if (isNaN(+id)){
+if (!isNaN(+id)){ //verificamos si el ID no es un numero con el !isNaN
   pokemon = await this.pokemonModel.findOne({no:id})
 }
 //verificacion por MongoID
-if (!pokemon && isValidObjectId(id)){
+if (!pokemon && isValidObjectId(id)){ // usamos funcion que viene en mongo  isValidObjectId que nos valida que el string es un MONGO_ID 
   pokemon = await this.pokemonModel.findById(id); // buscamos el pokemon por el MONGO_ID 
 }
 
@@ -47,16 +51,23 @@ if(!pokemon){  //primero verificamos que el nombre no este vacio
 }
 
 if(!pokemon)
-throw new NotFoundException(`Pokemon whih id, name or no "${id}" not found `)
+throw new NotFoundException(`Pokemon whit id, name or no "${id}" not found `)
 return pokemon;
 
   }
-
-  update(id: number, updatePokemonDto: UpdatePokemonDto) {
-    return `This action updates a #${id} pokemon`;
+//-----------------------------------------------------------------//
+ 
+//-----------------------------------------------------------------//
+async update(id: string, updatePokemonDto: UpdatePokemonDto) {
+const pokemon = await this.findOne(id) // llamamos a la función findOne para ubicar el pokemon a modificar ya sea por nombre numero o el dato que se use segun este el DATABASE
+if(updatePokemonDto.name)
+updatePokemonDto.name = updatePokemonDto.name.toLowerCase() //convertimos todo el nombre en minusculas por que asi los tenemos grabados en DATABASE 
+await pokemon.updateOne(updatePokemonDto)   // actualizamos el objeto completo del pokemon 
+return {...pokemon.toJSON,...updatePokemonDto};
   }
-
-  remove(id: number) {
+//-----------------------------------------------------------------//
+  remove(id: string) {
     return `This action removes a #${id} pokemon`;
   }
+  //-----------------------------------------------------------------//
 }

@@ -15,7 +15,7 @@ export class PokemonController {
 
   @Get()
   findAll() {
-    return this.pokemonService.findAll();
+    return this.pokemonService.findAllPokemon();
   }
 
   @Get(':id')
@@ -23,13 +23,13 @@ export class PokemonController {
     return this.pokemonService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch(':id')  // en estos caso el  ID no se ahce referencia al mongoID se refiere al termino de busqueda como tal este puede ser el valor que yo decida "ID" "nombre" "color" ect que gente dentro de los campos de la DATABASE
   update(@Param('id') id: string, @Body() updatePokemonDto: UpdatePokemonDto) {
-    return this.pokemonService.update(+id, updatePokemonDto);
+    return this.pokemonService.update(id, updatePokemonDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.pokemonService.remove(+id);
+    return this.pokemonService.remove(id);
   }
 }
