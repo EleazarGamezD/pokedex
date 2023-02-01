@@ -8,6 +8,12 @@ import { Pokemon, PokemonSchema } from './entities/pokemon.entity';
   controllers: [PokemonController],
   providers: [PokemonService],
 imports: [
-  MongooseModule.forFeature([{name: Pokemon.name, schema: PokemonSchema,}])]
+  MongooseModule.forFeature([{
+    name: Pokemon.name, 
+    schema: PokemonSchema,
+  }
+])
+],
+exports :[MongooseModule]   // exportamos el modelo para poder ser usado en el seed 
 })
 export class PokemonModule {}

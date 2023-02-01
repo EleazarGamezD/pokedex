@@ -17,7 +17,8 @@ export class PokemonService {
   async create(createPokemonDto: CreatePokemonDto) {
     createPokemonDto.name = createPokemonDto.name.toLowerCase(); // para grabar los nombres en minúsculas 
     // se usa try and catch para poder realizar validacion de usario o nro repetido usando una unica consulta a la DB y ahorrar tiempo y recursos 
-    try {    const pokemon = await this.pokemonModel.create(createPokemonDto)    // validamos que el nro o usuario no exista para poder crearlo en DATABASE 
+    try {    
+    const pokemon = await this.pokemonModel.create(createPokemonDto)    // validamos que el nro o usuario no exista para poder crearlo en DATABASE 
     return pokemon;}
     catch (error){                // Si el usuario o nro existe devolvemos el error del servidor y con el código del mismo indicamos que tipo de error es   
      this.handleException(error)  //llamando al metodo privado de manejador de errores
