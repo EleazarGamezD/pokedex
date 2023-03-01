@@ -60,3 +60,11 @@ $ npm run test:cov
 ```  
   docker-compose up -d 
 ```
+
+4.-  construccion de la base de datos con el comando Seed 
+
+```
+ http://localhost:3000/api/v2/seed
+
+```
+
