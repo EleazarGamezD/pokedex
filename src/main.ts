@@ -9,9 +9,16 @@ app.useGlobalPipes(
  new ValidationPipe({
  whitelist: true,
  forbidNonWhitelisted: true,
+ // configuracion para que los Query parametres se lean en modo number y no en string solucionando el choque de informacion
+ // tramsforma la informacion que llega los Dtos a la informacion que este espera para su validacion.
+  transform: true,
+ transformOptions: {
+  enableImplicitConversion: true,
+}
+//.......................
  })
 );
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT);
 }
 bootstrap();

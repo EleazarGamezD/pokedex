@@ -5,6 +5,7 @@ import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { Model, isValidObjectId } from 'mongoose';
 import { Pokemon } from './entities/pokemon.entity';
 import { InjectModel } from '@nestjs/mongoose';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class PokemonService {
@@ -25,8 +26,15 @@ export class PokemonService {
     }}
 //-----------------------------------------------------------------//
 //-----------------------------------------------------------------//    
-  async findAllPokemon(): Promise<Pokemon[]> {   // espera una Promesa con un arreglo de Todos los Pokemones 
-    return this.pokemonModel.find().exec();  // retorna todos los pokemones en la DATABASE y los envia al arreglo resolviendo asi la promesa 
+  async findAllPokemon(paginationDto:PaginationDto): Promise<Pokemon[]> {   // espera una Promesa con un arreglo de Todos los Pokemones 
+    const{limit = 10, offset = 0} = paginationDto // desectructuracion del paginationDTO para poder ingresar valores al limit y al offset por defectos en caso de que no sean colocados en la UR
+    return this.pokemonModel.find() // retorna todos los pokemones en la DATABASE y los envia al arreglo resolviendo asi la promesa
+    .limit(limit)
+    .skip(offset) 
+    .sort(
+      {no: 1
+      })  
+    .select('-__v')
   }
 //-----------------------------------------------------------------//
 
