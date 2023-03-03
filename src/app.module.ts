@@ -8,11 +8,15 @@ import { PokemonModule } from './pokemon/pokemon.module';
 import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
 import { EnvConfiguration } from 'config/env.config';
+import { JoiValidationSchema } from 'config/joi.validation';
 
 @Module({
   imports: [
-  ConfigModule.forRoot({load: [EnvConfiguration]}),  //linea de codigo para decirle a nest que lea el archivo de variable de entorno .ENV importante instalar @nestjs/config
-  ServeStaticModule.forRoot({
+  ConfigModule.forRoot({   //linea de código para decirle a nest que lea el archivo de variable de entorno .ENV importante instalar @nestjs/config
+   load: [EnvConfiguration] , // mapeo de variables de entorno 
+   validationSchema: JoiValidationSchema, // validación del Schema de las variables de entorno instalar npm install  Joi
+  }),  
+    ServeStaticModule.forRoot({
     rootPath: join(__dirname,'..','public'),
   }),
   

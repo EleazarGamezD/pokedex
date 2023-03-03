@@ -20,5 +20,7 @@ app.useGlobalPipes(
 );
 
   await app.listen(process.env.PORT);
+  console.log(`App running on Port ${process.env.PORT}`)
 }
 bootstrap();
+ 
