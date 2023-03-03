@@ -6,14 +6,23 @@ import { Model, isValidObjectId } from 'mongoose';
 import { Pokemon } from './entities/pokemon.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PokemonService {
- 
+ private defaultLimit:number;
  constructor(
   @InjectModel(Pokemon.name)
-  private readonly pokemonModel:Model<Pokemon> ){}
- 
+  private readonly pokemonModel:Model<Pokemon>, 
+  private readonly configService:ConfigService,
+  ){
+    this.defaultLimit=configService.get<number>('defaulLimit');
+  }
+  
+  
+
+
+
 //-----------------------------------------------------------------//
   async create(createPokemonDto: CreatePokemonDto) {
     createPokemonDto.name = createPokemonDto.name.toLowerCase(); // para grabar los nombres en minúsculas 
@@ -27,7 +36,8 @@ export class PokemonService {
 //-----------------------------------------------------------------//
 //-----------------------------------------------------------------//    
   async findAllPokemon(paginationDto:PaginationDto): Promise<Pokemon[]> {   // espera una Promesa con un arreglo de Todos los Pokemones 
-    const{limit = 10, offset = 0} = paginationDto // desectructuracion del paginationDTO para poder ingresar valores al limit y al offset por defectos en caso de que no sean colocados en la UR
+    
+    const{limit = this.defaultLimit, offset = 0} = paginationDto // desectructuracion del paginationDTO para poder ingresar valores al limit y al offset por defectos en caso de que no sean colocados en la UR
     return this.pokemonModel.find() // retorna todos los pokemones en la DATABASE y los envia al arreglo resolviendo asi la promesa
     .limit(limit)
     .skip(offset) 
