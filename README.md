@@ -64,7 +64,7 @@ $ npm run test:cov
 
 6.- Llenar las variables de entorno definidas en el __.env__
 
-7.- ejecutar la aplicacion en deb 
+7.- ejecutar la aplicacion en dev 
 ```
 npm run start:dev
 ```
