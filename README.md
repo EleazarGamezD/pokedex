@@ -46,7 +46,7 @@ $ npm run test:cov
 1.- Clonar el Repositorio
 ```
 
-2.- Ejecutar 
+2.- Ejecutar
 ```
    npm install
 ```
@@ -56,29 +56,29 @@ $ npm run test:cov
   npm i -g @nestjs/cli
 ```
 
-4.- Levantar la base de datos 
-```  
-  docker-compose up -d 
+4.- Levantar la base de datos
+```
+  docker-compose up -d
 ```
 5.- Clonar el archivo __.env.template__ y renombrar la copia a __.env__
 
 6.- Llenar las variables de entorno definidas en el __.env__
 
-7.- ejecutar la aplicacion en dev 
+7.- ejecutar la aplicacion en dev
 ```
 npm run start:dev
 ```
-8.-  construccion de la base de datos con el comando Seed 
+8.-  construccion de la base de datos con el comando Seed
 
 ```
  http://localhost:3000/api/v2/seed
 
 ```
 
-#Build de produccion 
-1.- crea el archivo ```.env.prod``` 
-2.- llamar alas variables de de entorno prod 
-3.- crear la nueva imagen 
+#Build de produccion
+1.- crea el archivo ```.env.prod```
+2.- llamar alas variables de de entorno prod
+3.- crear la nueva imagen
 
 
 __DOCKER__
